@@ -103,7 +103,9 @@ public class ResourceMining : MonoBehaviour {
 				//ObjectInteract (item);
 				Vector3 offset = Random.Range(-1f, 1f) * Vector3.forward;
 				GameObject resource = validateObject.InstantiateFinalObject(this.gameObject);
+				resource.transform.position = transform.position + offset;
 				resource.name = validateObject.nameFinalObject(this.gameObject);
+				// fix position
 				EventTrigger objectTrigger = item.GetComponent<EventTrigger> ();
 				objectTrigger.enabled = false;
 				objectsFromInventoryCount++;
