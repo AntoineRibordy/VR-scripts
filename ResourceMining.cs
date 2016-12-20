@@ -86,26 +86,21 @@ public class ResourceMining : MonoBehaviour {
 
 	void InteractFromInventory ()
 	{
-		//Move current object to the left
-		//transform.position += new Vector3(-0.25f,0,0);
 		//Pull object from inventory to interact
-			
 		for (int i = 0; i < inventory.inventory.Count; i++){
 			// Check if object is a valid object to interact with
 			if (validateObject.IsObjectValidForInteraction(this.gameObject, inventory.inventory[i])){
 				item = Instantiate (inventory.inventory [i]) as GameObject;
 				item.transform.parent = transform;
-				//Debug.Log ("item: " + item);
 				//Position object to the right & make it active
 				item.transform.position = Vector3.Lerp (item.transform.position, player.transform.position, fracJourney) + new Vector3 (0.25f, 0.75f, 0) * i;
 				item.SetActive (true);
-				//Sort out name issue (e.g. item should be Log and not Log(Clone))
 				//ObjectInteract (item);
 				Vector3 offset = Random.Range(-1f, 1f) * Vector3.forward;
 				GameObject resource = validateObject.InstantiateFinalObject(this.gameObject);
+				//Object location at mining source
 				resource.transform.position = transform.position + offset;
 				resource.name = validateObject.nameFinalObject(this.gameObject);
-				// fix position
 				EventTrigger objectTrigger = item.GetComponent<EventTrigger> ();
 				objectTrigger.enabled = false;
 				objectsFromInventoryCount++;
@@ -129,19 +124,7 @@ public class ResourceMining : MonoBehaviour {
 		Animation anim = obj.GetComponent<Animation>();
 		anim.Play("Cutting"); // Need to generalise an play whatever animation is on the object
 	}
-
-	/*void MergeObjects()
-	{
-		//Merge them: Set objects as inactive & instantiate new object
-		item.SetActive(false);
-		//gameObject.SetActive(false);
-		//GameObject newitem = Instantiate (inventory.inventory [1]) as GameObject;
-		GameObject newitem = Instantiate (GameObject.FindGameObjectWithTag("CubeFinal")) as GameObject;
-		newitem.SetActive (true);
-		newitem.transform.position = Vector3.Lerp (newitem.transform.position, player.transform.position, fracJourney) + new Vector3 (0.25f, 0.75f, 0);
-	}*/
-
-
+		
 
 	public void PullTowardsPlayer() {
 		//Get player position (GvrViewer)
@@ -170,15 +153,8 @@ public class ResourceMining : MonoBehaviour {
 
 	/// Called when the viewer's trigger is used, between OnGazeEnter and OnGazeExit.
 	public void OnGazeTrigger() {
-		/*if (!objectPulledOnce) {
-			PullTowardsPlayer ();
-			objectPulledOnce = true;
-		} else {*/
 		itemFromInventory = true;
 		inventory.reticleOnObject = false;
-		//ObjectInteract ();
-		//gameObject.SetActive (false);
-		//}
 	}
 
 	#endregion
