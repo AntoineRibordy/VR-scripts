@@ -122,7 +122,7 @@ public class ResourceMining : MonoBehaviour {
 		//item.transform.position = Vector3.Lerp (item.transform.position, transform.position, 0.4f);
 		// Play animation
 		Animation anim = obj.GetComponent<Animation>();
-		anim.Play("Cutting"); // Need to generalise an play whatever animation is on the object
+		anim.Play(anim.clip.name);
 	}
 		
 
