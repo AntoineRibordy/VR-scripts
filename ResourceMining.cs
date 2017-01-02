@@ -6,8 +6,10 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Collider))]
 public class ResourceMining : MonoBehaviour {
 
+
 	public GameObject player;
 	public float objectSpeed = 3.0f;
+
 	//public int numberOfObjectsToBeAdded = 1;
 
 	private Vector3 startingPosition;
@@ -92,10 +94,11 @@ public class ResourceMining : MonoBehaviour {
 			if (validateObject.IsObjectValidForInteraction(this.gameObject, inventory.inventory[i])){
 				item = Instantiate (inventory.inventory [i]) as GameObject;
 				item.transform.parent = transform;
+				item.transform.position = new Vector3 (0, 0, 0);
 				//Position object to the right & make it active
 				item.transform.position = Vector3.Lerp (item.transform.position, player.transform.position, fracJourney) + new Vector3 (0.25f, 0.75f, 0) * i;
 				item.SetActive (true);
-				//ObjectInteract (item);
+				ObjectInteract (item);
 				Vector3 offset = Random.Range(-1f, 1f) * Vector3.forward;
 				GameObject resource = validateObject.InstantiateFinalObject(this.gameObject);
 				//Object location at mining source
@@ -118,11 +121,11 @@ public class ResourceMining : MonoBehaviour {
 
 	void ObjectInteract (GameObject obj)
 	{
-		//Move object from inventory towards current object (will need to put that in an update loop with a timer so the movement is progressive)
-		//item.transform.position = Vector3.Lerp (item.transform.position, transform.position, 0.4f);
+		// Need to update it to use trigger
 		// Play animation
-		Animation anim = obj.GetComponent<Animation>();
-		anim.Play(anim.clip.name);
+		obj.GetComponent<PullObject>().TriggerAnimation();
+		//Animation anim = obj.GetComponent<Animation>();
+		//anim.Play(anim.clip.name);
 	}
 		
 

@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(Collider))]
 public class PullObject : MonoBehaviour, IGvrGazeResponder {
+	[Tooltip("The name of the trigger parameter")]
+	public string AnimationName; //name of the trigger parameter
+	[Tooltip("The Animator Component we created")]
+	public Animator stateMachine; //animator state machine
+
 	private Vector3 startingPosition;
 	private bool objectPulledOnce = false;
 	private Inventory inventory;
@@ -71,6 +76,11 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 		GvrViewer player = FindObjectOfType<GvrViewer>();
 		float fracJourney = 0.7f;
 		transform.position = Vector3.Lerp(transform.position, player.transform.position, fracJourney) + new Vector3(0,0.75f,0);
+	}
+
+	public void TriggerAnimation()
+	{
+		stateMachine.SetTrigger(AnimationName); //sets trigger
 	}
 
 	#region IGvrGazeResponder implementation
