@@ -86,22 +86,38 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 		//Move current object to the left
 		//transform.position += new Vector3(-0.25f,0,0);
 		//Pull object from inventory to interact
+		Debug.Log("Inventory.Count: " + inventory.inventory.Count);
 		for (int i = 0; i < inventory.inventory.Count; i++){
 			// Check if object is a valid object to interact with
-			if (validateObject.IsObjectValidForInteraction(this.gameObject, inventory.inventory[i])){
-				// Increment counter
-				objectsFromInventoryCount++;
+			if (inventory.inventory [i]) {
+				if (validateObject.IsObjectValidForInteraction (this.gameObject, inventory.inventory [i])) {
+					// Increment counter
+					objectsFromInventoryCount++;
+				}
 			}
 		}
+		Debug.Log ("# items from inventory: " + objectsFromInventoryCount);
 		// If player has all the elements, instantiate final object and destroy current one
-		if(objectsFromInventoryCount == numberOfObjectsToBeAdded){
+		if(objectsFromInventoryCount >= numberOfObjectsToBeAdded){
 			item = validateObject.InstantiateFinalObject(this.gameObject) as GameObject;
+			Debug.Log("Item: " + item);
 			item.transform.position = player.transform.position + Vector3.forward;
 			item.SetActive (true);
 			Destroy (gameObject);
 			inventory.reticleOnObject = false;
+			/*for (int i = 0; i < inventory.inventory.Count; i++) {
+				// Check if object is a valid object to interact with
+				if (inventory.inventory [i]) {
+					if (validateObject.IsObjectValidForInteraction (this.gameObject, inventory.inventory [i])) {
+						inventory.inventory.Remove (inventory.inventory [i]);
+						// Removing items for inventory afterwards creates issues when trying to access gameobjects later
+					}
+				}
+			}
+			*/
 			//ObjectInteract (item);
 		}
+		objectsFromInventoryCount = 0;
 		/*else {
 			objectsFromInventoryCount = 0;
 		}
