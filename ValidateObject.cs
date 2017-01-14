@@ -44,14 +44,14 @@ public class ValidateObject : MonoBehaviour {
 			} else
 				return false;
 			break;
-		case "Pole":
-			if (sourceObject.name == "String") {
+		case "Fishing Area":
+			if (sourceObject.name == "Fishing Pole") {
 				return true;
 			} else
 				return false;
 			break;
-		case "Fishing Area":
-			if (sourceObject.name == "Fishing Pole") {
+		case "LiveFire":
+			if (sourceObject.name == "Fish") {
 				return true;
 			} else
 				return false;
@@ -84,10 +84,10 @@ public class ValidateObject : MonoBehaviour {
 		case "Fire":
 			return objectsToInstantiate [5]; 
 			break;
-		case "Pole":
+		case "Fishing Area":
 			return objectsToInstantiate [6]; 
 			break;
-		case "Fishing Area":
+		case "LiveFire":
 			return objectsToInstantiate [7]; 
 			break;
 		default:
