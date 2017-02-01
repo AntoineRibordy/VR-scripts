@@ -101,7 +101,7 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 		if(objectsFromInventoryCount >= numberOfObjectsToBeAdded){
 			item = validateObject.InstantiateFinalObject(this.gameObject) as GameObject;
 			Debug.Log("Item: " + item);
-			item.transform.position = player.transform.position + Vector3.forward;
+			item.transform.position = transform.position;
 			item.SetActive (true);
 			Destroy (gameObject);
 			inventory.reticleOnObject = false;
