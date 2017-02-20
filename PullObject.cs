@@ -8,10 +8,13 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 	public string AnimationName; //name of the trigger parameter
 	[Tooltip("The Animator Component we created")]
 	public Animator stateMachine; //animator state machine
+	public Color color = new Color(0.2f, 0.3f, 0.5f, 1.0f);
+	public float fracJourney = 0.6f;
 
 	private Vector3 startingPosition;
 	private bool objectPulledOnce = false;
 	private Inventory inventory;
+	private Color objectColor;
 
 
 
@@ -19,6 +22,7 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 		startingPosition = transform.localPosition;
 		SetGazedAt(false);
 		inventory = GameObject.FindObjectOfType<Inventory>();
+		objectColor = GetComponent<Renderer> ().material.color;
 	}
 
 	void LateUpdate() {
@@ -26,7 +30,8 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 	}
 
 	public void SetGazedAt(bool gazedAt) {
-		GetComponent<Renderer>().material.color = gazedAt ? Color.green : Color.red;
+		// Alternative color should be original color, not red.
+		GetComponent<Renderer>().material.color = gazedAt ? color : objectColor;
 	}
 
 	public void Reset() {
@@ -72,10 +77,12 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 
 	public void PullTowardsPlayer() {
 		//Get player position (GvrViewer)
-		//Add 0.95 * player position to transform
-		GvrViewer player = FindObjectOfType<GvrViewer>();
-		float fracJourney = 0.7f;
-		transform.position = Vector3.Lerp(transform.position, player.transform.position, fracJourney) + new Vector3(0,0.75f,0);
+		//Move object from its current position towards player (move fracJourney of the distance)
+		GvrHead player = FindObjectOfType<GvrHead>();
+		transform.position = Vector3.Lerp(transform.position, player.transform.position, fracJourney);
+		//Vector3 diff = player.transform.position - transform.position;
+		//Ray ray = new Ray (transform.position, diff);
+		//transform.position = ray.GetPoint(diff.magnitude * fracJourney);
 	}
 
 	public void TriggerAnimation()
