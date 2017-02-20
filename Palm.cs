@@ -5,11 +5,13 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(Collider))]
 public class Palm: MonoBehaviour, IGvrGazeResponder {
-	public GameObject player;
 	public GameObject palmLog;
 	public float logSpeed = 3.0f;
+	public float offsetObject = 1.0f;
+	public int logCount;
 	//public int numberOfObjectsToBeAdded = 1;
 
+	private GameObject player;
 	private Vector3 startingPosition;
 	private bool objectPulledOnce = false;
 	private bool objectComplete = false;
@@ -20,7 +22,7 @@ public class Palm: MonoBehaviour, IGvrGazeResponder {
 	//private bool objectsToBeMerged = false;
 	private GameObject item = null;
 	private int objectsFromInventoryCount = 0;
-	private int logCount;
+
 
 
 
@@ -30,7 +32,6 @@ public class Palm: MonoBehaviour, IGvrGazeResponder {
 		SetGazedAt(false);
 		inventory = GameObject.FindObjectOfType<Inventory>();
 		//logCount = Random.Range (1, 3);
-		logCount = 3;
 	}
 
 	void Update()
@@ -91,15 +92,44 @@ public class Palm: MonoBehaviour, IGvrGazeResponder {
 		for (int i = 0; i < inventory.inventory.Count; i++){
 			if (inventory.inventory [i].name == "Axe") {
 				item = Instantiate (inventory.inventory [i]) as GameObject;
-				item.transform.parent = transform;
-				//Debug.Log ("item: " + item);
-				//Position object to the right & make it active
-				item.transform.position = Vector3.Lerp (item.transform.position, player.transform.position, fracJourney) + new Vector3 (0.25f, 0.75f, 0) * i;
+				player = GameObject.Find("GvrViewerMain");
+				var empty = new GameObject();
+				//Position object player is using to the right of the player & make it active (use empty gameobject to play animation in the right place)
+				empty.transform.position = player.transform.position;
+				empty.transform.parent = player.transform;
+				Vector3 delta = transform.position - player.transform.position;
+				delta = Vector3.Normalize (delta);
+				empty.transform.position += offsetObject * delta;
+				Debug.Log ("delta: " + delta);
+				Vector3 offset = Quaternion.AngleAxis(90.0f, Vector3.up) * delta * 0.7f;
+				Debug.Log ("offset: " + offset);
+				empty.transform.position += offset;
+				empty.transform.position += new Vector3 (0, 0.7f, 0);
+				// Capture angle between delta and Vector3.forward
+				float sign = (Vector3.right.z < delta.z)? -1.0f : 1.0f;
+				float angle = Vector3.Angle(delta, Vector3.right) * sign;
+				//Rotate empty gameobject by angle between delta and Vector3.forward
+				empty.transform.Rotate(0,angle,0);
+				/*
+				item.transform.position = player.transform.position;
+				item.transform.parent = player.transform;
+				Vector3 delta = transform.position - player.transform.position;
+				delta = Vector3.Normalize (delta);
+				item.transform.position += offsetObject * delta;
+				Debug.Log ("delta: " + delta);
+				Vector3 offset = Quaternion.AngleAxis(90.0f, Vector3.up) * delta * 0.7f;
+				Debug.Log ("offset: " + offset);
+				item.transform.position += offset;
+				item.transform.position += new Vector3 (0, 0.7f, 0);
+				*/
+				item.transform.position = empty.transform.position;
+				item.transform.rotation = empty.transform.rotation;
+				item.transform.parent = empty.transform;
 				item.SetActive (true);
-				//Sort out name issue (e.g. item should be Log and not Log(Clone))
 				ObjectInteract (item);
-				Vector3 offset = Random.Range(-1f, 1f) * Vector3.forward;
-				GameObject log = Instantiate (palmLog, transform.position + offset, Quaternion.Euler(0, 0, 90)) as GameObject;
+				Vector3 offset2 = Random.Range(-1f, 1f) * Vector3.forward;
+				GameObject log = Instantiate (palmLog, transform.position + offset2, Quaternion.Euler(0, 0, 90)) as GameObject;
+				log.SetActive (true);
 				log.name = "Log";
 				EventTrigger objectTrigger = item.GetComponent<EventTrigger> ();
 				objectTrigger.enabled = false;
@@ -118,11 +148,9 @@ public class Palm: MonoBehaviour, IGvrGazeResponder {
 
 	void ObjectInteract (GameObject obj)
 	{
-		//Move object from inventory towards current object (will need to put that in an update loop with a timer so the movement is progressive)
-		//item.transform.position = Vector3.Lerp (item.transform.position, transform.position, 0.4f);
-		// Play animation
-		Animation anim = obj.GetComponent<Animation>();
-		anim.Play("Cutting"); // Need to generalise an play whatever animation is on the object
+		// Play animation of object from inventory
+		obj.GetComponent<Animator>().enabled = true;
+		obj.GetComponent<PullObject>().TriggerAnimation();
 	}
 
 	/*void MergeObjects()
