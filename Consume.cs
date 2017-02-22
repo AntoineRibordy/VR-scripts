@@ -8,6 +8,7 @@ public class Consume : MonoBehaviour, IGvrGazeResponder {
 	public string AnimationName; //name of the trigger parameter
 	[Tooltip("The Animator Component we created")]
 	public Animator stateMachine; //animator state machine
+	public float offsetObject = 1.0f;
 
 	private Vector3 startingPosition;
 	private bool objectPulledOnce = false;
@@ -64,15 +65,36 @@ public class Consume : MonoBehaviour, IGvrGazeResponder {
 
 	public void TriggerAnimation()
 	{
-		GvrViewer player = FindObjectOfType<GvrViewer>();
-		transform.parent = player.transform;
+		GetComponent<Animator>().enabled = true;
 		stateMachine.SetTrigger(AnimationName); //sets trigger
+		StartCoroutine (DestroyAfterAnimation (gameObject));
 	}
 		
+	public void PositionItem()
+	{
+		GvrViewer player = FindObjectOfType<GvrViewer>();
+		var empty = new GameObject();
+		//Position object player is using to the right of the player & make it active (use empty gameobject to play animation in the right place)
+		empty.transform.position = player.transform.position;
+		empty.transform.parent = player.transform;
+		Vector3 delta = transform.position - player.transform.position;
+		delta = Vector3.Normalize (delta);
+		empty.transform.position += offsetObject * delta;
+		empty.transform.position += new Vector3 (0, 0.5f, 0);
+		// Capture angle between delta and Vector3.forward
+		float sign = (Vector3.back.z < delta.z)? 1.0f : -1.0f;
+		float angle = Vector3.Angle(delta, Vector3.back) * sign;
+		//Rotate empty gameobject by angle between delta and Vector3.forward
+		empty.transform.Rotate(0,angle,0);
+		transform.position = empty.transform.position;
+		transform.rotation = empty.transform.rotation;
+		transform.parent = empty.transform;
+	}
 
-	IEnumerator DestroyAfterFiveSeconds() {
-		yield return new WaitForSeconds(5);
-		Destroy(gameObject);
+	IEnumerator DestroyAfterAnimation(GameObject obj)
+	{
+		yield return new WaitForEndOfFrame();
+		//Destroy (obj, obj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
 	}
 
 	#region IGvrGazeResponder implementation
@@ -99,10 +121,8 @@ public class Consume : MonoBehaviour, IGvrGazeResponder {
 			PullTowardsPlayer ();
 			objectPulledOnce = true;
 		} else {
+			PositionItem ();
 			TriggerAnimation ();
-			// To modify so object gets destroyed only once animation is finished
-			//yield WaitForSeconds (animation["AnimationName"].length);
-			StartCoroutine(DestroyAfterFiveSeconds());
 		}
 	}
 
