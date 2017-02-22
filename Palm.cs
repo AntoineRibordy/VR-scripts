@@ -108,24 +108,11 @@ public class Palm: MonoBehaviour, IGvrGazeResponder {
 				// Capture angle between delta and Vector3.forward
 				float sign = (Vector3.right.z < delta.z)? -1.0f : 1.0f;
 				float angle = Vector3.Angle(delta, Vector3.right) * sign;
-				//Rotate empty gameobject by angle between delta and Vector3.forward
+				//Rotate empty gameobject by angle between delta and Vector3.right
 				empty.transform.Rotate(0,angle,0);
-				/*
-				item.transform.position = player.transform.position;
-				item.transform.parent = player.transform;
-				Vector3 delta = transform.position - player.transform.position;
-				delta = Vector3.Normalize (delta);
-				item.transform.position += offsetObject * delta;
-				Debug.Log ("delta: " + delta);
-				Vector3 offset = Quaternion.AngleAxis(90.0f, Vector3.up) * delta * 0.7f;
-				Debug.Log ("offset: " + offset);
-				item.transform.position += offset;
-				item.transform.position += new Vector3 (0, 0.7f, 0);
-				*/
 				item.transform.position = empty.transform.position;
 				item.transform.rotation = empty.transform.rotation;
 				item.transform.parent = empty.transform;
-				item.SetActive (true);
 				ObjectInteract (item);
 				Vector3 offset2 = Random.Range(-1f, 1f) * Vector3.forward;
 				GameObject log = Instantiate (palmLog, transform.position + offset2, Quaternion.Euler(0, 0, 90)) as GameObject;
@@ -143,15 +130,36 @@ public class Palm: MonoBehaviour, IGvrGazeResponder {
 			gameObject.SetActive (false);
 			objectComplete = true;
 		}
-
+			
 	}
 
-	void ObjectInteract (GameObject obj)
+	private void ObjectInteract (GameObject obj)
 	{
 		// Play animation of object from inventory
+		obj.SetActive (true);
 		obj.GetComponent<Animator>().enabled = true;
 		obj.GetComponent<PullObject>().TriggerAnimation();
+		StartCoroutine (DestroyAfterAnimation (obj));
 	}
+
+	IEnumerator DestroyAfterAnimation(GameObject obj)
+	{
+		yield return new WaitForEndOfFrame();
+		Destroy (obj, obj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+	}
+
+	/*IEnumerator ObjectInteract (GameObject obj)
+	{
+		// Play animation of object from inventory
+		obj.SetActive (true);
+		obj.GetComponent<Animator>().enabled = true;
+		obj.GetComponent<PullObject>().TriggerAnimation();
+		Debug.Log ("Animation name: " + obj.GetComponent<PullObject> ().AnimationName + " ");
+		Debug.Log("Anim length: " + obj.GetComponent<PullObject> ().AnimationName.Length);
+		yield return new WaitForSeconds (obj.GetComponent<PullObject> ().AnimationName.Length);
+		Destroy (obj);
+		//yield return new WaitForSeconds (obj.GetComponent<Animator> ().GetCurrentAnimatorStateInfo (0).length);
+	}*/
 
 	/*void MergeObjects()
 	{
