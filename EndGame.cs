@@ -8,12 +8,14 @@ public class EndGame : MonoBehaviour {
 	private ScreenFader screenfader;
 	private Inventory inventory;
 	private bool faded = false;
+	private Palm palm;
 
 
 	// Use this for initialization
 	void Start () {
 		screenfader = FindObjectOfType<ScreenFader> ();
 		inventory = GameObject.FindObjectOfType<Inventory>();
+		palm = GameObject.FindObjectOfType<Palm> ();
 	}
 
 
@@ -46,6 +48,7 @@ public class EndGame : MonoBehaviour {
 		//FadeOut();
 		GameObject reticle = GameObject.Find("GvrReticle");
 		reticle.SetActive (false);
+		palm.stopInteracting = true;
 		StartCoroutine (FadeOut ());
 		// Play endgame clip
 		MusicManager musicManager = FindObjectOfType<MusicManager>();
@@ -53,5 +56,9 @@ public class EndGame : MonoBehaviour {
 		audio.Play ();
 		// Wait for waitTime seconds, then call endgame scene
 		StartCoroutine (CallEndGameGUI());
+	}
+
+	void OnLevelWasLoaded(){
+		palm.stopInteracting = false;
 	}
 }

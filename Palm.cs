@@ -9,6 +9,7 @@ public class Palm: MonoBehaviour, IGvrGazeResponder {
 	public float logSpeed = 3.0f;
 	public float offsetObject = 1.0f;
 	public int logCount;
+	public bool stopInteracting = false;
 	//public int numberOfObjectsToBeAdded = 1;
 
 	private GameObject player;
@@ -144,8 +145,15 @@ public class Palm: MonoBehaviour, IGvrGazeResponder {
 
 	IEnumerator DestroyAfterAnimation(GameObject obj)
 	{
+		GameObject reticle = GameObject.Find("GvrReticle");
+		reticle.SetActive (false);
+		stopInteracting = true;
 		yield return new WaitForEndOfFrame();
-		Destroy (obj, obj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+		//Destroy (obj, obj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+		yield return new WaitForSeconds (obj.GetComponent<Animator> ().GetCurrentAnimatorStateInfo (0).length);
+		Destroy (obj);
+		reticle.SetActive (true);
+		stopInteracting = false;
 	}
 
 	/*IEnumerator ObjectInteract (GameObject obj)
@@ -206,8 +214,10 @@ public class Palm: MonoBehaviour, IGvrGazeResponder {
 			PullTowardsPlayer ();
 			objectPulledOnce = true;
 		} else {*/
-		itemFromInventory = true;
-		inventory.reticleOnObject = false;
+		if (!stopInteracting) {
+			itemFromInventory = true;
+			inventory.reticleOnObject = false;
+		}
 		//ObjectInteract ();
 		//gameObject.SetActive (false);
 		//}

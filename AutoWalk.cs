@@ -17,6 +17,7 @@ public class AutoWalk : MonoBehaviour
 	// This variable determinates if the player will move or not 
 	private bool isWalking = false;
 	private Inventory inventory;
+	private Palm palm;
 
 	GvrHead head = null;
 	GvrViewer gvrViewer = null;
@@ -47,13 +48,14 @@ public class AutoWalk : MonoBehaviour
 		head = GameObject.FindObjectOfType<GvrHead> ();
 		gvrViewer = GameObject.FindObjectOfType<GvrViewer> ();
 		inventory = GameObject.FindObjectOfType<Inventory>();
+		palm = GameObject.FindObjectOfType<Palm> ();
 		inventory.reticleOnObject = false;
 	}
 
 	void Update () 
 	{
 		// Walk when the Cardboard Trigger is used 
-		if (walkWhenTriggered && !walkWhenLookDown && !isWalking && gvrViewer.Triggered && !inventory.reticleOnObject) 
+		if (walkWhenTriggered && !walkWhenLookDown && !isWalking && gvrViewer.Triggered && !inventory.reticleOnObject && !palm.stopInteracting) 
 		{
 			isWalking = true;
 		} 
@@ -65,7 +67,7 @@ public class AutoWalk : MonoBehaviour
 		// Walk when player looks below the threshold angle 
 		if (walkWhenLookDown && !walkWhenTriggered && !isWalking &&  
 			head.transform.eulerAngles.x >= thresholdAngle && 
-			head.transform.eulerAngles.x <= RIGHT_ANGLE && !inventory.reticleOnObject) 
+			head.transform.eulerAngles.x <= RIGHT_ANGLE && !inventory.reticleOnObject && !palm.stopInteracting) 
 		{
 			isWalking = true;
 		} 
