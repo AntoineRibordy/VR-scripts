@@ -7,7 +7,8 @@ using System.Collections.Generic;
 public class Palm: MonoBehaviour, IGvrGazeResponder {
 	public GameObject palmLog;
 	public float logSpeed = 3.0f;
-	public float offsetObject = 1.0f;
+	public float offsetObjectFront = 1.0f;
+	public float offsetObjectRight = 0.5f;
 	public int logCount;
 	public bool stopInteracting = false;
 	//public int numberOfObjectsToBeAdded = 1;
@@ -34,6 +35,8 @@ public class Palm: MonoBehaviour, IGvrGazeResponder {
 		inventory = GameObject.FindObjectOfType<Inventory>();
 		//logCount = Random.Range (1, 3);
 	}
+
+
 
 	void Update()
 	{
@@ -87,9 +90,7 @@ public class Palm: MonoBehaviour, IGvrGazeResponder {
 
 	void InteractFromInventory ()
 	{
-		//Move current object to the left
-		//transform.position += new Vector3(-0.25f,0,0);
-		//Pull object from inventory to interact
+		// 
 		for (int i = 0; i < inventory.inventory.Count; i++){
 			if (inventory.inventory [i].name == "Axe") {
 				item = Instantiate (inventory.inventory [i]) as GameObject;
@@ -100,9 +101,8 @@ public class Palm: MonoBehaviour, IGvrGazeResponder {
 				empty.transform.parent = player.transform;
 				Vector3 delta = transform.position - player.transform.position;
 				delta = Vector3.Normalize (delta);
-				empty.transform.position += offsetObject * delta;
-				Debug.Log ("delta: " + delta);
-				Vector3 offset = Quaternion.AngleAxis(90.0f, Vector3.up) * delta * 0.7f;
+				empty.transform.position += offsetObjectFront * delta;
+				Vector3 offset = Quaternion.AngleAxis(90.0f, Vector3.up) * delta * offsetObjectRight;
 				Debug.Log ("offset: " + offset);
 				empty.transform.position += offset;
 				empty.transform.position += new Vector3 (0, 0.7f, 0);
