@@ -6,16 +6,13 @@ public class EndGame : MonoBehaviour {
 	public GameObject canvas;
 
 	private ScreenFader screenfader;
-	private Inventory inventory;
-	private bool faded = false;
-	private Palm palm;
+	private ResourceMining resourceMining;
 
 
 	// Use this for initialization
 	void Start () {
 		screenfader = FindObjectOfType<ScreenFader> ();
-		inventory = GameObject.FindObjectOfType<Inventory>();
-		palm = GameObject.FindObjectOfType<Palm> ();
+		resourceMining = GameObject.FindObjectOfType<ResourceMining> ();
 	}
 
 
@@ -30,7 +27,6 @@ public class EndGame : MonoBehaviour {
 			elapsedTime += Time.deltaTime;
 		}
 		screenfader.fadeIn = false;
-		faded = true;
 	}
 
 	public IEnumerator CallEndGameGUI()
@@ -45,10 +41,9 @@ public class EndGame : MonoBehaviour {
 
 	public void EndTheGame (){
 		// Fade to black at the end of the game
-		//FadeOut();
 		GameObject reticle = GameObject.Find("GvrReticle");
 		reticle.SetActive (false);
-		palm.stopInteracting = true;
+		resourceMining.stopInteracting = true;
 		StartCoroutine (FadeOut ());
 		// Play endgame clip
 		MusicManager musicManager = FindObjectOfType<MusicManager>();
@@ -59,6 +54,6 @@ public class EndGame : MonoBehaviour {
 	}
 
 	void OnLevelWasLoaded(){
-		palm.stopInteracting = false;
+		resourceMining.stopInteracting = false;
 	}
 }
