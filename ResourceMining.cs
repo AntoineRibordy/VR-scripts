@@ -5,26 +5,19 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(Collider))]
 public class ResourceMining : MonoBehaviour {
-
-
-	public GameObject player;
 	public float objectSpeed = 3.0f;
+	public float offsetObjectFront = 1.0f;
+	public float offsetObjectRight = 0.5f;
+	public bool stopInteracting = false;
 
-	//public int numberOfObjectsToBeAdded = 1;
-
+	private GameObject player;
 	private Vector3 startingPosition;
-	private bool objectComplete = false;
 	private Inventory inventory;
-	GameObject cubeFinal;
-	private float fracJourney = 0.5f;
 	private bool itemFromInventory = false;
-	//private bool objectsToBeMerged = false;
-	private ValidateObject validateObject;
 	private GameObject item = null;
+	private ValidateObject validateObject;
 	private int objectsFromInventoryCount = 0;
 	private int objectCount;
-
-
 
 
 	void Start() {
@@ -32,8 +25,7 @@ public class ResourceMining : MonoBehaviour {
 		SetGazedAt(false);
 		inventory = GameObject.FindObjectOfType<Inventory>();
 		validateObject = GameObject.FindObjectOfType<ValidateObject> ();
-		//logCount = Random.Range (1, 3);
-		objectCount = 3;
+		objectCount = Random.Range (1, 3);
 	}
 
 	void Update()
@@ -42,13 +34,6 @@ public class ResourceMining : MonoBehaviour {
 			InteractFromInventory ();
 			itemFromInventory = false;
 		}
-		/* if (objectComplete)
-		{
-			PlayAudio();
-			GameWon = true;
-		}*/
-
-
 	}
 
 	void LateUpdate() {
@@ -56,7 +41,7 @@ public class ResourceMining : MonoBehaviour {
 	}
 
 	public void SetGazedAt(bool gazedAt) {
-		GetComponent<Renderer>().material.color = gazedAt ? Color.green : Color.red;
+		//GetComponent<Renderer>().material.color = gazedAt ? Color.green : Color.red;
 	}
 
 	public void Reset() {
@@ -88,53 +73,82 @@ public class ResourceMining : MonoBehaviour {
 
 	void InteractFromInventory ()
 	{
-		//Pull object from inventory to interact
+		// Pull object from inventory to interact
 		for (int i = 0; i < inventory.inventory.Count; i++){
-			// Check if object is a valid object to interact with
+			// Check if object is a valid object to interact with and if so, instantiate it
 			if (validateObject.IsObjectValidForInteraction(this.gameObject, inventory.inventory[i])){
 				item = Instantiate (inventory.inventory [i]) as GameObject;
-				item.transform.parent = transform;
-				item.transform.position = new Vector3 (0, 0, 0);
-				//Position object to the right & make it active
-				item.transform.position = Vector3.Lerp (item.transform.position, player.transform.position, fracJourney) + new Vector3 (0.25f, 0.75f, 0) * i;
-				item.SetActive (true);
+				var empty = new GameObject();
+				PositionEmpty (empty);
+				// Place object used for mining at the right place to animate it
+				item.transform.position = empty.transform.position;
+				item.transform.rotation = empty.transform.rotation;
+				item.transform.parent = empty.transform;
 				ObjectInteract (item);
-				Vector3 offset = Random.Range(-1f, 1f) * Vector3.forward;
-				GameObject resource = validateObject.InstantiateFinalObject(this.gameObject);
-				//Object location at mining source
-				resource.transform.position = transform.position + offset;
-				resource.name = validateObject.nameFinalObject(this.gameObject);
-				EventTrigger objectTrigger = item.GetComponent<EventTrigger> ();
-				objectTrigger.enabled = false;
-				objectsFromInventoryCount++;
+				ProduceResource ();
 			}
 		}
 		// If all components have been added on object, make it inactive
 		if (objectsFromInventoryCount == objectCount) {
 			EventTrigger trigger = GetComponent<EventTrigger> ();
 			trigger.enabled = false;
-			gameObject.SetActive (false);
-			objectComplete = true;
 		}
-
 	}
 
-	void ObjectInteract (GameObject obj)
+	//Position object player is using to the right of the player & make it active (use empty gameobject to play animation in the right place)
+	private void PositionEmpty(GameObject empty){
+		player = GameObject.Find("GvrViewerMain");
+		empty.transform.position = player.transform.position;
+		empty.transform.parent = player.transform;
+		Vector3 delta = transform.position - player.transform.position;
+		delta = Vector3.Normalize (delta);
+		empty.transform.position += offsetObjectFront * delta;
+		Vector3 offset = Quaternion.AngleAxis(90.0f, Vector3.up) * delta * offsetObjectRight;
+		empty.transform.position += offset;
+		empty.transform.position += new Vector3 (0, 0.7f, 0);
+		// Capture angle between delta and Vector3.forward
+		float sign = (Vector3.right.z < delta.z)? -1.0f : 1.0f;
+		float angle = Vector3.Angle(delta, Vector3.right) * sign;
+		//Rotate empty gameobject by angle between delta and Vector3.right
+		empty.transform.Rotate(0,angle,0);
+	}
+
+	private void ObjectInteract (GameObject obj)
 	{
-		// Need to update it to use trigger
-		// Play animation
+		// Play animation of object from inventory
+		obj.SetActive (true);
+		obj.GetComponent<Animator>().enabled = true;
 		obj.GetComponent<PullObject>().TriggerAnimation();
-		//Animation anim = obj.GetComponent<Animation>();
-		//anim.Play(anim.clip.name);
+		StartCoroutine (DestroyAfterAnimation (obj));
 	}
 		
 
-	public void PullTowardsPlayer() {
-		//Get player position (GvrViewer)
-		//Add 0.95 * player position to transform
-		GvrViewer player = FindObjectOfType<GvrViewer>();
-		float fracJourney = 0.6f;
-		transform.position = Vector3.Lerp(transform.position, player.transform.position, fracJourney) + new Vector3(0,0.75f,0);
+	IEnumerator DestroyAfterAnimation(GameObject obj)
+	{
+		GameObject reticle = GameObject.Find("GvrReticle");
+		reticle.SetActive (false);
+		stopInteracting = true;
+		yield return new WaitForEndOfFrame();
+		//Destroy (obj, obj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+		yield return new WaitForSeconds (obj.GetComponent<Animator> ().GetCurrentAnimatorStateInfo (0).length);
+		Destroy (obj);
+		if (objectsFromInventoryCount == objectCount) {
+			gameObject.SetActive (false);
+		}
+		reticle.SetActive (true);
+		stopInteracting = false;
+	}
+
+	private void ProduceResource (){
+		Vector3 offset2 = Random.Range(-1f, 1f) * Vector3.forward;
+		GameObject resource = validateObject.InstantiateFinalObject(this.gameObject);
+		//Object location at mining source
+		resource.transform.position = transform.position + offset2;
+		resource.SetActive (true);
+		resource.name = validateObject.nameFinalObject(this.gameObject);
+		EventTrigger objectTrigger = item.GetComponent<EventTrigger> ();
+		objectTrigger.enabled = false;
+		objectsFromInventoryCount++;
 	}
 
 	#region IGvrGazeResponder implementation
@@ -156,8 +170,10 @@ public class ResourceMining : MonoBehaviour {
 
 	/// Called when the viewer's trigger is used, between OnGazeEnter and OnGazeExit.
 	public void OnGazeTrigger() {
-		itemFromInventory = true;
-		inventory.reticleOnObject = false;
+		if (!stopInteracting) {
+			itemFromInventory = true;
+			inventory.reticleOnObject = false;
+		}
 	}
 
 	#endregion
