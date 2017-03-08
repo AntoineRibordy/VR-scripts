@@ -33,7 +33,6 @@ public class RaycastMovement : MonoBehaviour {
 		if (Physics.Raycast (raycastHolder.transform.position, (forwardDir), out hit)) {
 			if (hit.collider.gameObject.tag == "movementCapable" || inventory.reticleOnObject) {
 				ManageIndicator ();
-				Debug.Log ("ReticleOnObject: " + inventory.reticleOnObject);
 				if (hit.distance <= maxMoveDistance && !inventory.reticleOnObject) { //If we are close enough
 
 					//If the indicator isn't active already make it active.
