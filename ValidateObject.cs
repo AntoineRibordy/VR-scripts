@@ -98,6 +98,8 @@ public class ValidateObject : MonoBehaviour {
 			return "Fishing Pole"; 
 		case "Fishing Area":
 			return "Fish"; 
+		case "LiveFire":
+			return "Fish";
 		default:
 			print ("Non-referrenced object");
 			return null;
