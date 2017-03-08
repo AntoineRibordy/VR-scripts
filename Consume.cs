@@ -80,11 +80,13 @@ public class Consume : MonoBehaviour, IGvrGazeResponder {
 		Vector3 delta = transform.position - player.transform.position;
 		delta = Vector3.Normalize (delta);
 		empty.transform.position += offsetObject * delta;
-		empty.transform.position += new Vector3 (0, 0.5f, 0);
-		// Capture angle between delta and Vector3.forward
-		float sign = (Vector3.back.z < delta.z)? 1.0f : -1.0f;
-		float angle = Vector3.Angle(delta, Vector3.back) * sign;
-		//Rotate empty gameobject by angle between delta and Vector3.forward
+		empty.transform.position += new Vector3 (0, 0.7f, 0);
+		// Capture angle between delta and Vector3.right
+		float sign = (Vector3.left.z < delta.z)? 1.0f : -1.0f;
+		float angle = Vector3.Angle(delta, Vector3.left) * sign;
+		Debug.Log ("Angle: " + angle);
+		//angle += 30;
+		//Rotate empty gameobject by angle between delta and Vector3.right +  degrees
 		empty.transform.Rotate(0,angle,0);
 		transform.position = empty.transform.position;
 		transform.rotation = empty.transform.rotation;

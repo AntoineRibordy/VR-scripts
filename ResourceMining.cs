@@ -97,7 +97,7 @@ public class ResourceMining : MonoBehaviour {
 
 	//Position object player is using to the right of the player & make it active (use empty gameobject to play animation in the right place)
 	private void PositionEmpty(GameObject empty){
-		player = GameObject.Find("GvrViewerMain");
+		player = GameObject.Find("Camera");
 		empty.transform.position = player.transform.position;
 		empty.transform.parent = player.transform;
 		Vector3 delta = transform.position - player.transform.position;
@@ -105,8 +105,8 @@ public class ResourceMining : MonoBehaviour {
 		empty.transform.position += offsetObjectFront * delta;
 		Vector3 offset = Quaternion.AngleAxis(90.0f, Vector3.up) * delta * offsetObjectRight;
 		empty.transform.position += offset;
-		empty.transform.position += new Vector3 (0, 0.7f, 0);
-		// Capture angle between delta and Vector3.forward
+		empty.transform.position += new Vector3 (0, 0.5f, 0);
+		// Capture angle between delta and Vector3.right
 		float sign = (Vector3.right.z < delta.z)? -1.0f : 1.0f;
 		float angle = Vector3.Angle(delta, Vector3.right) * sign;
 		//Rotate empty gameobject by angle between delta and Vector3.right
@@ -140,8 +140,10 @@ public class ResourceMining : MonoBehaviour {
 	}
 
 	private void ProduceResource (){
-		Vector3 offset2 = Random.Range(-1f, 1f) * Vector3.forward;
-		GameObject resource = validateObject.InstantiateFinalObject(this.gameObject);
+		// Pb: new resource replaces old one and sometimes glitches when trying to pick it up
+
+		Vector3 offset2 = Random.Range(-2f, 2f) * Vector3.forward;
+		GameObject resource = Instantiate(validateObject.InstantiateFinalObject(this.gameObject)) as GameObject;
 		//Object location at mining source
 		resource.transform.position = transform.position + offset2;
 		resource.SetActive (true);
