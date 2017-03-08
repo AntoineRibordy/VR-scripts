@@ -85,7 +85,6 @@ public class ResourceMining : MonoBehaviour {
 				item.transform.rotation = empty.transform.rotation;
 				item.transform.parent = empty.transform;
 				ObjectInteract (item);
-				ProduceResource ();
 			}
 		}
 		// If all components have been added on object, make it inactive
@@ -131,6 +130,7 @@ public class ResourceMining : MonoBehaviour {
 		yield return new WaitForEndOfFrame();
 		//Destroy (obj, obj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
 		yield return new WaitForSeconds (obj.GetComponent<Animator> ().GetCurrentAnimatorStateInfo (0).length);
+		ProduceResource ();
 		Destroy (obj);
 		if (objectsFromInventoryCount == objectCount) {
 			gameObject.SetActive (false);
