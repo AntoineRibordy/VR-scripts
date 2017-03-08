@@ -70,11 +70,7 @@ public class ScreenFader : MonoBehaviour
             lastFadeIn = fadeIn;
             StartCoroutine(DoFade());
         }
-
-		 /* if (fadeIn && !lastFadeIn) {
-			StartCoroutine(DoFade());
-			lastFadeIn = true;
-		}*/
+			
     }
     
     public IEnumerator DoFade()

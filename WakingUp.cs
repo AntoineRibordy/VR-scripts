@@ -29,8 +29,8 @@ public class WakingUp : MonoBehaviour {
 				yield return new WaitForEndOfFrame();
 				elapsedTime += Time.deltaTime;
 			}
+			screenfader.fadeIn = true;
 		}
-		screenfader.fadeIn = true;
 		faded = false;
 	}
 
