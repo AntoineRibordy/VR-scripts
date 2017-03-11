@@ -22,7 +22,6 @@ public class Consume : MonoBehaviour, IGvrGazeResponder {
 		startingPosition = transform.localPosition;
 		SetGazedAt(false);
 		inventory = GameObject.FindObjectOfType<Inventory>();
-		//player = GameObject.Find("Player");
 		player = FindObjectOfType<GvrHead>();
 		glow = GetComponent<Glow> ();
 		if (glow == null) {
@@ -67,7 +66,6 @@ public class Consume : MonoBehaviour, IGvrGazeResponder {
 		
 	public void PullTowardsPlayer() {
 		//Move object from its current position towards player (move fracJourney of the distance)
-		Debug.Log ("transform.position: " + transform.position + " Player.transform.position: " + player.transform.position);
 		transform.position = Vector3.Lerp(transform.position, player.transform.position, fracJourney);
 	}
 

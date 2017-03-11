@@ -89,12 +89,22 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 		if(objectsFromInventoryCount >= numberOfObjectsToBeAdded){
 			item = validateObject.InstantiateFinalObject(this.gameObject) as GameObject;
 			item.transform.position = transform.position;
-			item.SetActive (true);
-			inventory.reticleOnObject = false;
-			Destroy (gameObject);
+			StartCoroutine (PlaySuccessAndDestroy ());
 		}
 		objectsFromInventoryCount = 0;
 
+	}
+
+	IEnumerator PlaySuccessAndDestroy()
+	{
+		MusicPicker musicPicker = FindObjectOfType<MusicPicker> ();
+		AudioClip successClip = musicPicker.successClip;
+		musicPicker.PlayClip (successClip);
+		inventory.reticleOnObject = false;
+		yield return new WaitForSeconds (successClip.length-0.1f);
+		musicPicker.StopClip ();
+		item.SetActive (true);
+		Destroy (gameObject);
 	}
 
 	#region IGvrGazeResponder implementation
