@@ -11,10 +11,12 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 	public Color color = new Color(0.2f, 0.3f, 0.5f, 1.0f);
 	public float fracJourney = 0.6f;
 
+	private GvrHead player;
 	private Vector3 startingPosition;
 	private bool objectPulledOnce = false;
 	private Inventory inventory;
 	private Color objectColor;
+	private Glow glow;
 
 
 
@@ -22,7 +24,12 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 		startingPosition = transform.localPosition;
 		SetGazedAt(false);
 		inventory = GameObject.FindObjectOfType<Inventory>();
+		player = FindObjectOfType<GvrHead>();
 		objectColor = GetComponent<Renderer> ().material.color;
+		glow = GetComponent<Glow> ();
+		if (glow == null) {
+			glow = GetComponentInChildren<Glow> ();
+		}
 	}
 
 	void LateUpdate() {
@@ -76,13 +83,9 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 
 
 	public void PullTowardsPlayer() {
-		//Get player position (GvrViewer)
+		//Get player position (GvrHead)
 		//Move object from its current position towards player (move fracJourney of the distance)
-		GvrHead player = FindObjectOfType<GvrHead>();
 		transform.position = Vector3.Lerp(transform.position, player.transform.position, fracJourney);
-		//Vector3 diff = player.transform.position - transform.position;
-		//Ray ray = new Ray (transform.position, diff);
-		//transform.position = ray.GetPoint(diff.magnitude * fracJourney);
 	}
 
 	public void TriggerAnimation()
@@ -106,6 +109,7 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 		Reset ();
 		objectPulledOnce = false;
 		inventory.reticleOnObject = false;
+		glow.pickedUp = false;
 	}
 
 	/// Called when the viewer's trigger is used, between OnGazeEnter and OnGazeExit.
@@ -113,9 +117,9 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 		if (!objectPulledOnce) {
 			PullTowardsPlayer ();
 			objectPulledOnce = true;
+			glow.pickedUp = true;
 		} else {
 			PutInInventory ();
-			//gameObject.SetActive (false);
 		}
 	}
 
