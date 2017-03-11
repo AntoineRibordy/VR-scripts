@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class MusicPicker : MonoBehaviour {
-	[Tooltip("The name of the trigger parameter")]
 	public AudioClip[] soundFiles;
 	public AudioClip deathClip;
 	public AudioClip successClip;
