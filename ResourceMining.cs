@@ -24,6 +24,7 @@ public class ResourceMining : MonoBehaviour {
 		startingPosition = transform.localPosition;
 		SetGazedAt(false);
 		inventory = GameObject.FindObjectOfType<Inventory>();
+		player = GameObject.Find("Player");
 		validateObject = GameObject.FindObjectOfType<ValidateObject> ();
 		objectCount = Random.Range (1, 3);
 	}
@@ -96,7 +97,6 @@ public class ResourceMining : MonoBehaviour {
 
 	//Position object player is using to the right of the player & make it active (use empty gameobject to play animation in the right place)
 	private void PositionEmpty(GameObject empty){
-		player = GameObject.Find("Camera");
 		empty.transform.position = player.transform.position;
 		empty.transform.parent = player.transform;
 		Vector3 delta = transform.position - player.transform.position;
@@ -127,6 +127,8 @@ public class ResourceMining : MonoBehaviour {
 		GameObject reticle = GameObject.Find("GvrReticle");
 		reticle.SetActive (false);
 		stopInteracting = true;
+		AudioSource audioSource = obj.GetComponent<AudioSource> ();
+		audioSource.Play ();
 		yield return new WaitForEndOfFrame();
 		//Destroy (obj, obj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
 		yield return new WaitForSeconds (obj.GetComponent<Animator> ().GetCurrentAnimatorStateInfo (0).length);

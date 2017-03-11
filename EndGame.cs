@@ -46,9 +46,9 @@ public class EndGame : MonoBehaviour {
 		resourceMining.stopInteracting = true;
 		StartCoroutine (FadeOut ());
 		// Play endgame clip
-		MusicManager musicManager = FindObjectOfType<MusicManager>();
-		AudioSource audio = musicManager.GetComponent<AudioSource>();
-		audio.Play ();
+		MusicPicker musicPicker = FindObjectOfType<MusicPicker> ();
+		AudioClip endMusic = musicPicker.endMusic;
+		musicPicker.PlayClip (endMusic);
 		// Wait for waitTime seconds, then call endgame scene
 		StartCoroutine (CallEndGameGUI());
 	}
