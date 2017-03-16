@@ -4,7 +4,7 @@ using System.Collections;
 public class Glow : MonoBehaviour {
 	private Material mat;
 
-	public float someValue = 0.2f;
+	public float glowValue = 0.2f;
 	public bool pickedUp = false;
 	// Use this for initialization
 	void Start () {
@@ -17,7 +17,7 @@ public class Glow : MonoBehaviour {
 			float emission = Mathf.PingPong (Time.time, 1.0f);
 			Color baseColor = Color.white; //Replace this with whatever you want for your base color at emission level '1'
 
-			Color finalColor = baseColor * someValue * Mathf.LinearToGammaSpace (emission);
+			Color finalColor = baseColor * glowValue * Mathf.LinearToGammaSpace (emission);
 
 			mat.SetColor ("_EmissionColor", finalColor);
 		}

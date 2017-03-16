@@ -11,6 +11,7 @@ public class Consume : MonoBehaviour, IGvrGazeResponder {
 	public float fracJourney = 0.6f;
 	public float offsetObjectFront = 1.0f;
 	public float offsetObjectRight = 0.0f;
+	public float offsetObjectDown = 0f;
 
 	private GvrHead player;
 	private Vector3 startingPosition;
@@ -96,11 +97,12 @@ public class Consume : MonoBehaviour, IGvrGazeResponder {
 		empty.transform.position += offsetObjectFront * delta;
 		Vector3 offset = Quaternion.AngleAxis(90.0f, Vector3.up) * delta * offsetObjectRight;
 		empty.transform.position += offset;
-		empty.transform.position += new Vector3 (0, 0.3f, 0);
-		// Capture angle between delta and Vector3.back
-		float sign = (Vector3.right.z < delta.z)? 1.0f : -1.0f;
-		float angle = Vector3.Angle(delta, Vector3.right) * sign;
-		//Rotate empty gameobject by angle between delta and Vector3.right
+		empty.transform.position += new Vector3 (0, offsetObjectDown, 0);
+		// Capture angle between delta and Vector3.left
+		float sign = (Vector3.left.z < delta.z)? 1.0f : -1.0f;
+		float angle = Vector3.Angle(delta, Vector3.left) * sign;
+		//Debug.Log ("sign: " + sign + " angle: " + angle);
+		//Rotate empty gameobject by angle between delta and Vector3.left
 		empty.transform.Rotate(0,angle,0);
 	}
 
