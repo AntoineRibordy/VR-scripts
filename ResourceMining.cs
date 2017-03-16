@@ -8,6 +8,7 @@ public class ResourceMining : MonoBehaviour {
 	public float objectSpeed = 3.0f;
 	public float offsetObjectFront = 1.0f;
 	public float offsetObjectRight = 0.5f;
+	public int maxObjectCount = 1;
 	public bool stopInteracting = false;
 
 	private GameObject player;
@@ -26,7 +27,7 @@ public class ResourceMining : MonoBehaviour {
 		inventory = GameObject.FindObjectOfType<Inventory>();
 		player = GameObject.Find("Player");
 		validateObject = GameObject.FindObjectOfType<ValidateObject> ();
-		objectCount = Random.Range (1, 3);
+		objectCount = Random.Range (1, maxObjectCount);
 	}
 
 	void Update()
@@ -130,7 +131,7 @@ public class ResourceMining : MonoBehaviour {
 		AudioSource audioSource = obj.GetComponent<AudioSource> ();
 		audioSource.Play ();
 		yield return new WaitForEndOfFrame();
-		//Destroy (obj, obj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+		//Destroy (obj, obj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);object
 		yield return new WaitForSeconds (obj.GetComponent<Animator> ().GetCurrentAnimatorStateInfo (0).length);
 		ProduceResource ();
 		Destroy (obj);
