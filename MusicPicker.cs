@@ -6,6 +6,7 @@ public class MusicPicker : MonoBehaviour {
 	public AudioClip deathClip;
 	public AudioClip successClip;
 	public AudioClip stressClip;
+	public AudioClip unwellClip;
 	public AudioClip endMusic;
 	public AudioSource soundSource;
 
