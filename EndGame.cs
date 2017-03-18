@@ -2,11 +2,11 @@
 using System.Collections;
 
 public class EndGame : MonoBehaviour {
-	public float waitTime = 10.0f;
 	public GameObject canvas;
 
 	private ScreenFader screenfader;
 	private ResourceMining resourceMining;
+	private AudioClip endMusic;
 
 
 	// Use this for initialization
@@ -29,17 +29,17 @@ public class EndGame : MonoBehaviour {
 		screenfader.fadeIn = false;
 	}
 
-	public IEnumerator CallEndGameGUI()
+	public IEnumerator CallEndGameGUI(string levelToLoad, float waitTime)
 	{
 		yield return new WaitForSeconds (waitTime);
-		FindObjectOfType<LevelManager> ().LoadLevel ("EndGame");
+		FindObjectOfType<LevelManager> ().LoadLevel (levelToLoad);
 	}
 
 	// Update is called once per frame
 	void Update () {
 	}
 
-	public void EndTheGame (){
+	public void EndTheGame (string endLevelToLoad, float waitTime){
 		// Fade to black at the end of the game
 		GameObject reticle = GameObject.Find("GvrReticle");
 		reticle.SetActive (false);
@@ -47,13 +47,16 @@ public class EndGame : MonoBehaviour {
 		StartCoroutine (FadeOut ());
 		// Play endgame clip
 		MusicPicker musicPicker = FindObjectOfType<MusicPicker> ();
-		AudioClip endMusic = musicPicker.endMusic;
+		if (endLevelToLoad == "EndGame") {
+			endMusic = musicPicker.endMusic;
+		} else endMusic = musicPicker.deathClip;
 		musicPicker.PlayClip (endMusic);
 		// Wait for waitTime seconds, then call endgame scene
-		StartCoroutine (CallEndGameGUI());
+		StartCoroutine (CallEndGameGUI(endLevelToLoad, waitTime));
 	}
 
 	void OnLevelWasLoaded(){
+		resourceMining = GameObject.FindObjectOfType<ResourceMining> ();
 		resourceMining.stopInteracting = false;
 	}
 }

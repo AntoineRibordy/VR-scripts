@@ -20,6 +20,7 @@ public class HealthManagement : MonoBehaviour {
 	private IEnumerator hungerCoroutine;
 	private int stressed = 0;
 	private MusicPicker musicPicker; 
+	private EndGame endgame;
 	// Use this for initialization
 	void Start () {
 		thirstCoroutine = ThirstTimer ();
@@ -27,6 +28,7 @@ public class HealthManagement : MonoBehaviour {
 		StartCoroutine (thirstCoroutine);
 		StartCoroutine (hungerCoroutine);
 		musicPicker = FindObjectOfType<MusicPicker> ();
+		endgame = FindObjectOfType<EndGame>();
 	}
 	
 	// Update is called once per frame
@@ -67,21 +69,23 @@ public class HealthManagement : MonoBehaviour {
 	private IEnumerator ThirstTimer(){
 		yield return new WaitForSeconds (thirstCounter);
 		// When timer runs out, call alter view function and issue warning about being thirsty
-		Debug.Log ("Thirsty");
+		//Debug.Log ("Thirsty");
 		StartCoroutine(DisplayStressGUI (thirstyCanvas));
 		StartCoroutine(Stressed());
 		yield return new WaitForSeconds (thirstCounter/2);
-		Debug.Log ("Dead");
+		string level = "GameOver";
+		endgame.EndTheGame (level, 8.0f);
 	}
 
 	private IEnumerator HungerTimer(){
 		yield return new WaitForSeconds (hungerCounter);
 		// When timer runs out, call alter view function and issue warning about being hungry
-		Debug.Log ("Hungry");
+		//Debug.Log ("Hungry");
 		StartCoroutine(DisplayStressGUI (hungryCanvas));
 		StartCoroutine(Stressed());
 		yield return new WaitForSeconds (hungerCounter/2);
-		Debug.Log ("Dead");
+		string level = "GameOver";
+		endgame.EndTheGame (level, 8.0f);
 	}
 
 	private IEnumerator Stressed (){

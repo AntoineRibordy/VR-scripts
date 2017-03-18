@@ -81,7 +81,8 @@ public class Raft: MonoBehaviour, IGvrGazeResponder {
 	public void OnGazeTrigger() {
 		// Call EndTheGame script
 		EndGame endgame = FindObjectOfType<EndGame>();
-		endgame.EndTheGame ();
+		string level = "EndGame";
+		endgame.EndTheGame (level, 10.0f);
 
 	}
 
