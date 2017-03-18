@@ -12,7 +12,9 @@ public class Consume : MonoBehaviour, IGvrGazeResponder {
 	public float offsetObjectFront = 1.0f;
 	public float offsetObjectRight = 0.0f;
 	public float offsetObjectDown = 0f;
+	public bool isLiquid = false;
 
+	private HealthManagement healthManagement;
 	private GvrHead player;
 	private Vector3 startingPosition;
 	private bool objectPulledOnce = false;
@@ -24,6 +26,7 @@ public class Consume : MonoBehaviour, IGvrGazeResponder {
 		SetGazedAt(false);
 		inventory = GameObject.FindObjectOfType<Inventory>();
 		player = FindObjectOfType<GvrHead>();
+		healthManagement = FindObjectOfType<HealthManagement> ();
 		glow = GetComponent<Glow> ();
 		if (glow == null) {
 			glow = GetComponentInChildren<Glow> ();
@@ -111,6 +114,10 @@ public class Consume : MonoBehaviour, IGvrGazeResponder {
 		// Play food/drink consumption audio clip
 		AudioSource audioSource = GetComponent<AudioSource>();
 		audioSource.Play ();
+		if (isLiquid) {
+			healthManagement.hasdrunk = true;
+		} else
+			healthManagement.haseaten = true;
 		yield return new WaitForEndOfFrame();
 		Destroy (obj, obj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
 	}
