@@ -8,11 +8,11 @@ public class MusicPicker : MonoBehaviour {
 	public AudioClip stressClip;
 	public AudioClip unwellClip;
 	public AudioClip endMusic;
-	public AudioSource soundSource;
+	private AudioSource soundSource;
 
 	// Use this for initialization
 	void Start () {
-
+		soundSource = FindObjectOfType<AudioSource> ();
 	}
 
 	// Update is called once per frame
