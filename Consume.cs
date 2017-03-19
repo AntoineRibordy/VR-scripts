@@ -150,6 +150,8 @@ public class Consume : MonoBehaviour, IGvrGazeResponder {
 		} else {
 			PositionItem ();
 			TriggerAnimation ();
+			inventory.reticleOnObject = false;
+			GetComponent<Collider> ().enabled = false;
 		}
 	}
 
