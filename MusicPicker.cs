@@ -12,7 +12,7 @@ public class MusicPicker : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		soundSource = FindObjectOfType<AudioSource> ();
+		soundSource = GameObject.Find ("MusicSource").GetComponent<AudioSource> ();
 	}
 
 	// Update is called once per frame
