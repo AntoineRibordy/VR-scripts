@@ -52,6 +52,7 @@ public class WakingUp : MonoBehaviour {
 		PositionCanvas (canvas);
 		yield return new WaitForSeconds (10.0f);
 		canvas.SetActive (true);
+		canvas.GetComponentInChildren<Text> ().text = "What happened?";
 		yield return new WaitForSeconds (3.0f);
 		canvas.GetComponentInChildren<Text> ().text = "Vague memories come back to you...";
 		yield return new WaitForSeconds (3.0f);
