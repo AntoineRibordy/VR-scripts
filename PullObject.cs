@@ -22,7 +22,6 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 
 	void Start() {
 		startingPosition = transform.localPosition;
-		SetGazedAt(false);
 		inventory = GameObject.FindObjectOfType<Inventory>();
 		player = FindObjectOfType<GvrHead>();
 		objectColor = GetComponent<Renderer> ().material.color;
@@ -34,11 +33,6 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 
 	void LateUpdate() {
 		GvrViewer.Instance.UpdateState();
-	}
-
-	public void SetGazedAt(bool gazedAt) {
-		// Alternative color should be original color, not red.
-		GetComponent<Renderer>().material.color = gazedAt ? color : objectColor;
 	}
 
 	public void Reset() {
@@ -98,14 +92,12 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 	/// Called when the user is looking on a GameObject with this script,
 	/// as long as it is set to an appropriate layer (see GvrGaze).
 	public void OnGazeEnter() {
-		SetGazedAt(true);
 		inventory.reticleOnObject = true;
 	}
 
 	/// Called when the user stops looking on the GameObject, after OnGazeEnter
 	/// was already called.
 	public void OnGazeExit() {
-		SetGazedAt(false);
 		Reset ();
 		objectPulledOnce = false;
 		inventory.reticleOnObject = false;

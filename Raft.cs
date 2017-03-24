@@ -18,7 +18,6 @@ public class Raft: MonoBehaviour, IGvrGazeResponder {
 
 	void Start() {
 		startingPosition = transform.localPosition;
-		SetGazedAt(false);
 		objectColor = GetComponent<Renderer> ().material.color;
 		inventory = GameObject.FindObjectOfType<Inventory>();
 	}
@@ -26,10 +25,6 @@ public class Raft: MonoBehaviour, IGvrGazeResponder {
 
 		void LateUpdate() {
 			GvrViewer.Instance.UpdateState();
-		}
-
-		public void SetGazedAt(bool gazedAt) {
-			GetComponent<Renderer>().material.color = gazedAt ? color : objectColor;
 		}
 
 		public void Reset() {
@@ -65,14 +60,12 @@ public class Raft: MonoBehaviour, IGvrGazeResponder {
 		/// Called when the user is looking on a GameObject with this script,
 		/// as long as it is set to an appropriate layer (see GvrGaze).
 		public void OnGazeEnter() {
-			SetGazedAt(true);
 			inventory.reticleOnObject = true;
 		}
 
 		/// Called when the user stops looking on the GameObject, after OnGazeEnter
 		/// was already called.
 		public void OnGazeExit() {
-			SetGazedAt(false);
 			Reset ();
 			inventory.reticleOnObject = false;
 		}
