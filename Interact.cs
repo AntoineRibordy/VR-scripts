@@ -9,6 +9,7 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 	public int numberOfObjectsToBeAdded = 1;
 	public Color color = new Color(0.2f, 0.3f, 0.5f, 1.0f);
 
+	private DisplayCanvas displayCanvas;
 	private Vector3 startingPosition;
 	private Inventory inventory;
 	private ValidateObject validateObject;
@@ -18,6 +19,8 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 	private GameObject item = null;
 	private int objectsFromInventoryCount = 0;
 	private Color objectColor;
+	private string objectName;
+	private int numberOfObjectsMissing;
 
 
 
@@ -27,6 +30,7 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 		inventory = GameObject.FindObjectOfType<Inventory>();
 		validateObject = GameObject.FindObjectOfType<ValidateObject> ();
 		objectColor = GetComponent<Renderer> ().material.color;
+		displayCanvas = FindObjectOfType<DisplayCanvas> ();
 	}
 
 	void Update()
@@ -77,14 +81,18 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 				if (validateObject.IsObjectValidForInteraction (this.gameObject, inventory.inventory [i])) {
 					// Increment counter
 					objectsFromInventoryCount++;
+					objectName = inventory.inventory [i].name;
 				}
 			}
 		}
 		// If player has all the elements, instantiate final object and destroy current one
-		if(objectsFromInventoryCount >= numberOfObjectsToBeAdded){
-			item = validateObject.InstantiateFinalObject(this.gameObject) as GameObject;
+		if (objectsFromInventoryCount >= numberOfObjectsToBeAdded) {
+			item = validateObject.InstantiateFinalObject (this.gameObject) as GameObject;
 			item.transform.position = transform.position;
 			StartCoroutine (PlaySuccessAndDestroy ());
+		} else if (objectName) {
+			numberOfObjectsMissing = numberOfObjectsToBeAdded - objectsFromInventoryCount;
+			StartCoroutine(displayCanvas.DisplayInteractGUI (objectName, numberOfObjectsMissing));
 		}
 		objectsFromInventoryCount = 0;
 

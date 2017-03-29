@@ -12,10 +12,9 @@ public class HealthManagement : MonoBehaviour {
 	public bool haseaten = false;
 	public PostProcessingBehaviour leftCamera;
 	public PostProcessingBehaviour rightCamera;
-	public GameObject thirstyCanvas;
-	public GameObject hungryCanvas;
 	public float offsetObjectFront = 8.0f;
 
+	private DisplayCanvas displayCanvas;
 	private IEnumerator thirstCoroutine;
 	private IEnumerator hungerCoroutine;
 	private int stressed = 0;
@@ -29,6 +28,7 @@ public class HealthManagement : MonoBehaviour {
 		StartCoroutine (hungerCoroutine);
 		musicPicker = FindObjectOfType<MusicPicker> ();
 		endgame = FindObjectOfType<EndGame>();
+		displayCanvas = FindObjectOfType<DisplayCanvas> ();
 	}
 	
 	// Update is called once per frame
@@ -44,7 +44,6 @@ public class HealthManagement : MonoBehaviour {
 				leftCamera.enabled = false;
 				rightCamera.enabled = false;
 				musicPicker.StopClip ();
-				thirstyCanvas.SetActive (false);
 			}
 		}
 
@@ -59,7 +58,6 @@ public class HealthManagement : MonoBehaviour {
 				leftCamera.enabled = false;
 				rightCamera.enabled = false;
 				musicPicker.StopClip ();
-				hungryCanvas.SetActive (false);
 			}
 		}
 			
@@ -70,7 +68,7 @@ public class HealthManagement : MonoBehaviour {
 		yield return new WaitForSeconds (thirstCounter);
 		// When timer runs out, call alter view function and issue warning about being thirsty
 		//Debug.Log ("Thirsty");
-		StartCoroutine(DisplayStressGUI (thirstyCanvas));
+		StartCoroutine(displayCanvas.DisplayStressGUI(displayCanvas.thirstyCanvas));
 		StartCoroutine(Stressed());
 		yield return new WaitForSeconds (thirstCounter/2);
 		string level = "GameOver";
@@ -81,7 +79,7 @@ public class HealthManagement : MonoBehaviour {
 		yield return new WaitForSeconds (hungerCounter);
 		// When timer runs out, call alter view function and issue warning about being hungry
 		//Debug.Log ("Hungry");
-		StartCoroutine(DisplayStressGUI (hungryCanvas));
+		StartCoroutine(displayCanvas.DisplayStressGUI(displayCanvas.hungryCanvas));
 		StartCoroutine(Stressed());
 		yield return new WaitForSeconds (hungerCounter/2);
 		string level = "GameOver";
@@ -100,21 +98,5 @@ public class HealthManagement : MonoBehaviour {
 		musicPicker.PlayClip (stressClip);	
 		stressed++;
 	}
-
-	// Display GUI to warn player that they're thirsty or hungry
-	private IEnumerator DisplayStressGUI (GameObject canvas){
-		PositionCanvas (canvas);
-		canvas.SetActive (true);
-		yield return new WaitForSeconds (5.0f);
-		canvas.SetActive (false);
-	}
-
-	private void PositionCanvas(GameObject canvas){
-		Vector3 offset = offsetObjectFront * Vector3.forward;
-		canvas.transform.position = player.transform.position + new Vector3 (0, 1.0f, 0) + player.transform.rotation * offset;
-		canvas.transform.rotation = player.transform.rotation;
-		canvas.transform.parent = player.transform;
-	}
-
 
 }

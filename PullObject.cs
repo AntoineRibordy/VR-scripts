@@ -1,15 +1,19 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Collider))]
 public class PullObject : MonoBehaviour, IGvrGazeResponder {
+
 	[Tooltip("The name of the trigger parameter")]
 	public string AnimationName; //name of the trigger parameter
 	[Tooltip("The Animator Component we created")]
 	public Animator stateMachine; //animator state machine
 	public Color color = new Color(0.2f, 0.3f, 0.5f, 1.0f);
 	public float fracJourney = 0.6f;
+	private DisplayCanvas displayCanvas;
+	public float offsetObjectFront = 8.0f;
 
 	private GvrHead player;
 	private Vector3 startingPosition;
@@ -18,14 +22,13 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 	private Color objectColor;
 	private Glow glow;
 
-
-
 	void Start() {
 		startingPosition = transform.localPosition;
 		inventory = GameObject.FindObjectOfType<Inventory>();
 		player = FindObjectOfType<GvrHead>();
 		objectColor = GetComponent<Renderer> ().material.color;
 		glow = GetComponent<Glow> ();
+		displayCanvas = FindObjectOfType<DisplayCanvas> ();
 		if (glow == null) {
 			glow = GetComponentInChildren<Glow> ();
 		}
@@ -66,6 +69,10 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 	{
 		//Put object in inventory
 		inventory.inventory.Add (gameObject);
+		// Display information GUI the first time the player picks up an object
+		if (!DisplayCanvas.pickedObjectGUIWasDisplayed) {
+			displayCanvas.HandlePickedObjectGUI();
+		}
 		//Set object as inactive
 		gameObject.SetActive (false);
 		inventory.reticleOnObject = false;
