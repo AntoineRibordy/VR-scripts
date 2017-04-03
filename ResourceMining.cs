@@ -26,7 +26,7 @@ public class ResourceMining : MonoBehaviour {
 		inventory = GameObject.FindObjectOfType<Inventory>();
 		player = GameObject.Find("Player");
 		validateObject = GameObject.FindObjectOfType<ValidateObject> ();
-		objectCount = Random.Range (1, maxObjectCount);
+		objectCount = Random.Range (1, maxObjectCount+1);
 	}
 
 	void Update()

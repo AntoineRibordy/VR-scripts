@@ -4,7 +4,6 @@ using System.Collections;
 
 public class WakingUp : MonoBehaviour {
 	public GameObject player;
-	public float offsetObjectFront = 8.0f;
 
 	private ScreenFader screenfader;
 	private DisplayCanvas displayCanvas;
@@ -12,14 +11,6 @@ public class WakingUp : MonoBehaviour {
 
 
 	private bool faded = true;
-	// Use this for initialization
-
-	/*void Awake()
-	{
-		screenfader = FindObjectOfType<ScreenFader> ();
-		screenfader.fadeIn = true;
-	}
-	*/
 
 	void Start () {
 		screenfader = FindObjectOfType<ScreenFader> ();

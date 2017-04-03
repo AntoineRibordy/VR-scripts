@@ -90,7 +90,7 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 			item = validateObject.InstantiateFinalObject (this.gameObject) as GameObject;
 			item.transform.position = transform.position;
 			StartCoroutine (PlaySuccessAndDestroy ());
-		} else if (objectName) {
+		} else if (objectName != null) {
 			numberOfObjectsMissing = numberOfObjectsToBeAdded - objectsFromInventoryCount;
 			StartCoroutine(displayCanvas.DisplayInteractGUI (objectName, numberOfObjectsMissing));
 		}
