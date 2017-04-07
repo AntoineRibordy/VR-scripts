@@ -18,7 +18,6 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 	//private bool objectsToBeMerged = false;
 	private GameObject item = null;
 	private int objectsFromInventoryCount = 0;
-	private Color objectColor;
 	private string objectName;
 	private int numberOfObjectsMissing;
 
@@ -29,7 +28,6 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 		startingPosition = transform.localPosition;
 		inventory = GameObject.FindObjectOfType<Inventory>();
 		validateObject = GameObject.FindObjectOfType<ValidateObject> ();
-		objectColor = GetComponent<Renderer> ().material.color;
 		displayCanvas = FindObjectOfType<DisplayCanvas> ();
 	}
 
@@ -90,12 +88,21 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 			item = validateObject.InstantiateFinalObject (this.gameObject) as GameObject;
 			item.transform.position = transform.position;
 			StartCoroutine (PlaySuccessAndDestroy ());
+			// Remove objects from inventory (numberOfObjectToBeAdded). 
+			objectsFromInventoryCount = 0;
+			for (int i = 0; i < inventory.inventory.Count; i++) {
+				if (inventory.inventory [i]) {
+					if (objectsFromInventoryCount <= numberOfObjectsToBeAdded && validateObject.IsObjectValidForInteraction (this.gameObject, inventory.inventory [i])) {
+						objectsFromInventoryCount++;
+						inventory.inventory [i] = null;
+					}
+				}
+			}
 		} else if (objectName != null) {
 			numberOfObjectsMissing = numberOfObjectsToBeAdded - objectsFromInventoryCount;
 			StartCoroutine(displayCanvas.DisplayInteractGUI (objectName, numberOfObjectsMissing));
 		}
 		objectsFromInventoryCount = 0;
-
 	}
 
 	IEnumerator PlaySuccessAndDestroy()
