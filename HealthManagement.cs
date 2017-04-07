@@ -17,7 +17,6 @@ public class HealthManagement : MonoBehaviour {
 	private DisplayCanvas displayCanvas;
 	private IEnumerator thirstCoroutine;
 	private IEnumerator hungerCoroutine;
-	private int stressed = 0;
 	private MusicPicker musicPicker; 
 	private EndGame endgame;
 	// Use this for initialization
@@ -39,8 +38,8 @@ public class HealthManagement : MonoBehaviour {
 			thirstCoroutine = ThirstTimer ();
 			StartCoroutine (thirstCoroutine);
 			hasdrunk = false;
-			stressed--;
-			if (stressed == 0) {
+			musicPicker.stressed--;
+			if (musicPicker.stressed == 0) {
 				leftCamera.enabled = false;
 				rightCamera.enabled = false;
 				musicPicker.StopClip ();
@@ -53,8 +52,8 @@ public class HealthManagement : MonoBehaviour {
 			hungerCoroutine = HungerTimer ();
 			StartCoroutine (hungerCoroutine);
 			haseaten = false;
-			stressed--;
-			if (stressed == 0) {
+			musicPicker.stressed--;
+			if (musicPicker.stressed == 0) {
 				leftCamera.enabled = false;
 				rightCamera.enabled = false;
 				musicPicker.StopClip ();
@@ -67,7 +66,6 @@ public class HealthManagement : MonoBehaviour {
 	private IEnumerator ThirstTimer(){
 		yield return new WaitForSeconds (thirstCounter);
 		// When timer runs out, call alter view function and issue warning about being thirsty
-		//Debug.Log ("Thirsty");
 		StartCoroutine(displayCanvas.DisplayStressGUI(displayCanvas.thirstyCanvas));
 		StartCoroutine(Stressed());
 		yield return new WaitForSeconds (thirstCounter/2);
@@ -78,7 +76,6 @@ public class HealthManagement : MonoBehaviour {
 	private IEnumerator HungerTimer(){
 		yield return new WaitForSeconds (hungerCounter);
 		// When timer runs out, call alter view function and issue warning about being hungry
-		//Debug.Log ("Hungry");
 		StartCoroutine(displayCanvas.DisplayStressGUI(displayCanvas.hungryCanvas));
 		StartCoroutine(Stressed());
 		yield return new WaitForSeconds (hungerCounter/2);
@@ -94,9 +91,8 @@ public class HealthManagement : MonoBehaviour {
 		musicPicker.PlayClip (unwellClip);
 		yield return new WaitForSeconds (unwellClip.length-0.1f);
 		musicPicker.StopClip ();
-		AudioClip stressClip = musicPicker.stressClip;
-		musicPicker.PlayClip (stressClip);	
-		stressed++;
+		musicPicker.PlayStressClip ();	
+		musicPicker.stressed++;
 	}
 
 }

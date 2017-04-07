@@ -8,6 +8,7 @@ public class MusicPicker : MonoBehaviour {
 	public AudioClip stressClip;
 	public AudioClip unwellClip;
 	public AudioClip endMusic;
+	public int stressed = 0;
 	private AudioSource soundSource;
 
 	// Use this for initialization
@@ -18,7 +19,10 @@ public class MusicPicker : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (!soundSource.isPlaying) {
-			PlayNextSong();
+			if (stressed == 0) {
+				PlayNextSong ();
+			} else
+				PlayStressClip ();
 		}
 	}
 
@@ -30,6 +34,11 @@ public class MusicPicker : MonoBehaviour {
 
 	public void PlayClip (AudioClip name){
 		soundSource.clip = name;
+		soundSource.Play ();
+	}
+
+	public void PlayStressClip (){
+		soundSource.clip = stressClip;
 		soundSource.Play ();
 	}
 
