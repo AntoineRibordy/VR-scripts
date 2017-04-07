@@ -13,12 +13,9 @@ public class Raft: MonoBehaviour, IGvrGazeResponder {
 	private Vector3 startingPosition;
 	private Inventory inventory;
 	private ValidateObject validateObject;
-	GameObject cubeFinal;
-	private Color objectColor;
 
 	void Start() {
 		startingPosition = transform.localPosition;
-		objectColor = GetComponent<Renderer> ().material.color;
 		inventory = GameObject.FindObjectOfType<Inventory>();
 	}
 		

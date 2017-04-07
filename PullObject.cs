@@ -19,14 +19,12 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 	private Vector3 startingPosition;
 	private bool objectPulledOnce = false;
 	private Inventory inventory;
-	private Color objectColor;
 	private Glow glow;
 
 	void Start() {
 		startingPosition = transform.localPosition;
 		inventory = GameObject.FindObjectOfType<Inventory>();
 		player = FindObjectOfType<GvrHead>();
-		objectColor = GetComponent<Renderer> ().material.color;
 		glow = GetComponent<Glow> ();
 		displayCanvas = FindObjectOfType<DisplayCanvas> ();
 		if (glow == null) {

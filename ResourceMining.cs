@@ -120,7 +120,7 @@ public class ResourceMining : MonoBehaviour {
 
 	IEnumerator DestroyAfterAnimation(GameObject obj)
 	{
-		GameObject reticle = GameObject.Find("GvrReticle");
+		GameObject reticle = GameObject.Find("GvrReticlePointer");
 		reticle.SetActive (false);
 		stopInteracting = true;
 		AudioSource audioSource = obj.GetComponent<AudioSource> ();
