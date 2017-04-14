@@ -92,7 +92,7 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 			objectsFromInventoryCount = 0;
 			for (int i = 0; i < inventory.inventory.Count; i++) {
 				if (inventory.inventory [i]) {
-					if (objectsFromInventoryCount <= numberOfObjectsToBeAdded && validateObject.IsObjectValidForInteraction (this.gameObject, inventory.inventory [i])) {
+					if (objectsFromInventoryCount < numberOfObjectsToBeAdded && validateObject.IsObjectValidForInteraction (this.gameObject, inventory.inventory [i])) {
 						objectsFromInventoryCount++;
 						inventory.inventory [i] = null;
 					}
