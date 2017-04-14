@@ -24,7 +24,7 @@ public class MusicSource : MonoBehaviour
 	}
 
 	void OnLevelWasLoaded(){
-		if (SceneManager.GetActiveScene ().name == "VR world 2") {
+		if (SceneManager.GetActiveScene ().name == "VR world") {
 			AudioSource audio = GetComponent<AudioSource>();
 			audio.Stop ();
 		}
