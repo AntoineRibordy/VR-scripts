@@ -41,7 +41,7 @@ public class EndGame : MonoBehaviour {
 
 	public void EndTheGame (string endLevelToLoad, float waitTime){
 		// Fade to black at the end of the game
-		GameObject reticle = GameObject.Find("GvrReticle");
+		GameObject reticle = GameObject.Find("GvrReticlePointer");
 		reticle.SetActive (false);
 		resourceMining.stopInteracting = true;
 		StartCoroutine (FadeOut ());
