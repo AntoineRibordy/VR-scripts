@@ -73,15 +73,17 @@ public class ResourceMining : MonoBehaviour {
 		// Pull object from inventory to interact
 		for (int i = 0; i < inventory.inventory.Count; i++){
 			// Check if object is a valid object to interact with and if so, instantiate it
-			if (validateObject.IsObjectValidForInteraction(this.gameObject, inventory.inventory[i])){
-				item = Instantiate (inventory.inventory [i]) as GameObject;
-				var empty = new GameObject();
-				PositionEmpty (empty);
-				// Place object used for mining at the right place to animate it
-				item.transform.position = empty.transform.position;
-				item.transform.rotation = empty.transform.rotation;
-				item.transform.parent = empty.transform;
-				ObjectInteract (item);
+			if (inventory.inventory [i]) {
+				if (validateObject.IsObjectValidForInteraction (this.gameObject, inventory.inventory [i])) {
+					item = Instantiate (inventory.inventory [i]) as GameObject;
+					var empty = new GameObject ();
+					PositionEmpty (empty);
+					// Place object used for mining at the right place to animate it
+					item.transform.position = empty.transform.position;
+					item.transform.rotation = empty.transform.rotation;
+					item.transform.parent = empty.transform;
+					ObjectInteract (item);
+				}
 			}
 		}
 		// If all components have been added on object, make it inactive
@@ -100,7 +102,7 @@ public class ResourceMining : MonoBehaviour {
 		empty.transform.position += offsetObjectFront * delta;
 		Vector3 offset = Quaternion.AngleAxis(90.0f, Vector3.up) * delta * offsetObjectRight;
 		empty.transform.position += offset;
-		empty.transform.position += new Vector3 (0, 0.5f, 0);
+		empty.transform.position += new Vector3 (0, 0.2f, 0);
 		// Capture angle between delta and Vector3.right
 		float sign = (Vector3.right.z < delta.z)? -1.0f : 1.0f;
 		float angle = Vector3.Angle(delta, Vector3.right) * sign;
@@ -126,7 +128,6 @@ public class ResourceMining : MonoBehaviour {
 		AudioSource audioSource = obj.GetComponent<AudioSource> ();
 		audioSource.Play ();
 		yield return new WaitForEndOfFrame();
-		//Destroy (obj, obj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);object
 		yield return new WaitForSeconds (obj.GetComponent<Animator> ().GetCurrentAnimatorStateInfo (0).length);
 		ProduceResource ();
 		Destroy (obj);
