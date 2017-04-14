@@ -12,7 +12,6 @@ public class HealthManagement : MonoBehaviour {
 	public bool haseaten = false;
 	public PostProcessingBehaviour leftCamera;
 	public PostProcessingBehaviour rightCamera;
-	public float offsetObjectFront = 8.0f;
 
 	private DisplayCanvas displayCanvas;
 	private IEnumerator thirstCoroutine;
