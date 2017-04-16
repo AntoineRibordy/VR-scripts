@@ -7,7 +7,6 @@ using System.Collections.Generic;
 public class Interact: MonoBehaviour, IGvrGazeResponder {
 	public GameObject player;
 	public int numberOfObjectsToBeAdded = 1;
-	public Color color = new Color(0.2f, 0.3f, 0.5f, 1.0f);
 
 	private DisplayCanvas displayCanvas;
 	private Vector3 startingPosition;
@@ -15,8 +14,6 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 	private ValidateObject validateObject;
 	GameObject cubeFinal;
 	private bool itemFromInventory = false;
-	//private bool objectsToBeMerged = false;
-	private GameObject item = null;
 	private int objectsFromInventoryCount = 0;
 	private string objectName;
 	private int numberOfObjectsMissing;
@@ -85,9 +82,11 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 		}
 		// If player has all the elements, instantiate final object and destroy current one
 		if (objectsFromInventoryCount >= numberOfObjectsToBeAdded) {
-			item = validateObject.InstantiateFinalObject (this.gameObject) as GameObject;
+			//item = validateObject.InstantiateFinalObject (this.gameObject) as GameObject;
+			GameObject item = Instantiate(validateObject.InstantiateFinalObject(this.gameObject)) as GameObject;
 			item.transform.position = transform.position;
-			StartCoroutine (PlaySuccessAndDestroy ());
+			item.name = validateObject.nameFinalObject(this.gameObject);
+			StartCoroutine (PlaySuccessAndDestroy (item));
 			// Remove objects from inventory (numberOfObjectToBeAdded). 
 			objectsFromInventoryCount = 0;
 			for (int i = 0; i < inventory.inventory.Count; i++) {
@@ -105,7 +104,7 @@ public class Interact: MonoBehaviour, IGvrGazeResponder {
 		objectsFromInventoryCount = 0;
 	}
 
-	IEnumerator PlaySuccessAndDestroy()
+	IEnumerator PlaySuccessAndDestroy(GameObject item)
 	{
 		MusicPicker musicPicker = FindObjectOfType<MusicPicker> ();
 		AudioClip successClip = musicPicker.successClip;
