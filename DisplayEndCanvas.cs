@@ -11,11 +11,7 @@ public class DisplayEndCanvas : MonoBehaviour {
 	void Start () {
 		PositionCanvas (gameObject);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 
 	private void PositionCanvas(GameObject canvas){
 		Vector3 offset = offsetObjectFront * Vector3.forward;

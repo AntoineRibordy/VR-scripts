@@ -17,11 +17,7 @@ public class MusicSource : MonoBehaviour
 		}
 			
 	}
-
-	void Update()
-	{
 		
-	}
 
 	void OnLevelWasLoaded(){
 		if (SceneManager.GetActiveScene ().name == "VR world") {
