@@ -87,19 +87,19 @@ public class ValidateObject : MonoBehaviour {
 		case "Raft":
 			return "Raft_final";
 		case "Branch":
-			return "Pole";
+			return "Fishing Pole";
 		case "Tree":
 			return "Log";
 		case "Rock":
 			return "Fire"; 
 		case "Fire":
-			return "Food"; 
+			return "LiveFire"; 
 		case "Pole":
 			return "Fishing Pole"; 
 		case "Fishing Area":
 			return "Fish"; 
 		case "LiveFire":
-			return "Fish";
+			return "CookedFish";
 		default:
 			print ("Non-referrenced object");
 			return null;
