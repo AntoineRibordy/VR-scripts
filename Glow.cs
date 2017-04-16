@@ -1,14 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Glow : MonoBehaviour {
-	private Material mat;
+	private Material[] mat;
+	private bool alteredEmissionColor = true;
 
 	public float glowValue = 0.2f;
 	public bool pickedUp = false;
 	// Use this for initialization
 	void Start () {
-		mat = GetComponent<Renderer>().material;
+		mat = GetComponent<Renderer>().materials;
 	}
 
 	// Update is called once per frame
@@ -18,8 +20,14 @@ public class Glow : MonoBehaviour {
 			Color baseColor = Color.white; //Replace this with whatever you want for your base color at emission level '1'
 
 			Color finalColor = baseColor * glowValue * Mathf.LinearToGammaSpace (emission);
-
-			mat.SetColor ("_EmissionColor", finalColor);
+			for (int i = 0; i < mat.Length; i++) {
+				mat [i].SetColor ("_EmissionColor", finalColor);
+			}
+		} else if (alteredEmissionColor) {
+			for (int i = 0; i < mat.Length; i++) {
+				mat [i].SetColor ("_EmissionColor", Color.black);
+			}
+			alteredEmissionColor = false;
 		}
 	
 	}
