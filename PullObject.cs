@@ -10,7 +10,6 @@ public class PullObject : MonoBehaviour, IGvrGazeResponder {
 	public string AnimationName; //name of the trigger parameter
 	[Tooltip("The Animator Component we created")]
 	public Animator stateMachine; //animator state machine
-	public Color color = new Color(0.2f, 0.3f, 0.5f, 1.0f);
 	public float fracJourney = 0.6f;
 	private DisplayCanvas displayCanvas;
 	public float offsetObjectFront = 8.0f;

@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class EndGame : MonoBehaviour {
-	public GameObject canvas;
 
 	private ScreenFader screenfader;
 	private ResourceMining resourceMining;

@@ -2,15 +2,6 @@
 using System.Collections;
 
 public class InteractiveObject : MonoBehaviour {
-	public float distance = 1.0f;
+	public float distance = 4.0f;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

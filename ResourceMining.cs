@@ -139,12 +139,11 @@ public class ResourceMining : MonoBehaviour {
 	}
 
 	private void ProduceResource (){
-		// Pb: new resource replaces old one and sometimes glitches when trying to pick it up
 
 		Vector3 offset2 = Random.Range(-2f, 2f) * Vector3.forward;
 		GameObject resource = Instantiate(validateObject.InstantiateFinalObject(this.gameObject)) as GameObject;
 		//Object location at mining source
-		resource.transform.position = transform.position + offset2;
+		resource.transform.position = transform.position + offset2 + new Vector3 (0, 0.2f, 0);
 		resource.SetActive (true);
 		resource.name = validateObject.nameFinalObject(this.gameObject);
 		EventTrigger objectTrigger = item.GetComponent<EventTrigger> ();
